@@ -147,18 +147,15 @@ namespace Mandelbrot
 	    private static double xstart, ystart, xende, yende, xzoom, yzoom;
 	    private static bool action, rectangle, finished;
 	    private static float xy;
-        //private Image picture;
-        private Image offScreen = new Bitmap(730, 562);
+        private Image offScreen;
         private Graphics g1;
         private Pen p;
         //private Cursor c1, c2;
-        private HSBColor HSBcol;
 
         public void init() // all instances will be prepared
         {
-            HSBcol = new HSBColor();
-           // setSize(800, 600);
             finished = false;
+            // setSize(800, 600);
             //addMouseListener(this);
             //addMouseMotionListener(this);
             //c1 = new Cursor(Cursor.WAIT_CURSOR);
@@ -167,8 +164,8 @@ namespace Mandelbrot
             x1 = Width;
             y1 = Height;
             xy = (float)x1 / (float)y1;
-            //picture.CreateControl();        //picture = createImage(x1, y1);
-            g1 = Graphics.FromImage(offScreen);
+            offScreen = new Bitmap(picture.Width, picture.Height);
+            g1 = Graphics.FromImage(offScreen);     //picture = createImage(x1, y1);
             finished = true;
         }
 
@@ -188,8 +185,8 @@ namespace Mandelbrot
             float h, b, alt = 0.0f;
 
             action = false;
-         /* setCursor(c1);
-            showStatus("Mandelbrot-Set will be produced - please wait...");  */
+         /* setCursor(c1); */
+            Text = "Mandelbrot-Set will be produced - please wait..."; 
             for (x = 0; x < x1; x += 2)
                 for (y = 0; y < y1; y++)
                 {
@@ -223,8 +220,10 @@ namespace Mandelbrot
                 }
             
             offScreen.Save("Test.bmp");
-         /* showStatus("Mandelbrot-Set ready - please select zoom area with pressed mouse.");
-            setCursor(c2);  */
+            Clipboard.SetImage(offScreen);
+
+            Text = "Mandelbrot-Set ready - please select zoom area with pressed mouse.";
+         /* setCursor(c2);  */
             action = true;
         }
 
@@ -268,7 +267,7 @@ namespace Mandelbrot
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.DrawImage(offScreen, 0, 0, Width, Height);      //(picture, 0, 0, this);
+            g.DrawImage(offScreen, 0, 0);      //(picture, 0, 0, this);
             if (rectangle)
             {
                 p.Color = Color.Black;      //.setColor(Color.white);
