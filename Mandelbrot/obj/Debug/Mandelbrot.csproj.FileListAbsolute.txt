@@ -1,9 +1,0 @@
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\bin\Debug\Mandelbrot.exe.config
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\bin\Debug\Mandelbrot.exe
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\bin\Debug\Mandelbrot.pdb
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\obj\Debug\Mandelbrot.Display.resources
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\obj\Debug\Mandelbrot.Properties.Resources.resources
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\obj\Debug\Mandelbrot.csproj.GenerateResource.Cache
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\obj\Debug\Mandelbrot.exe
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\obj\Debug\Mandelbrot.pdb
-C:\Users\Antz\Documents\SVN\Final--Year--Uni\ASDA\Assignment1\Mandelbrot\Mandelbrot\obj\Debug\Mandelbrot.csprojResolveAssemblyReference.cache
