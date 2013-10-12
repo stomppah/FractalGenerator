@@ -126,7 +126,7 @@ namespace Mandelbrot
             }
 
             return Color.FromArgb
-                (
+                ( 
                     hsbColor.a,
                     (int)Math.Round(Math.Min(Math.Max(r, 0), 255)),
                     (int)Math.Round(Math.Min(Math.Max(g, 0), 255)),
@@ -148,14 +148,15 @@ namespace Mandelbrot
 	    private static bool action, rectangle, finished;
 	    private static float xy;
         //private Image picture;
+        private Image offScreen = new Bitmap(730, 562);
         private Graphics g1;
         private Pen p;
         //private Cursor c1, c2;
-        //private HSBColor HSBcol = new HSBColor();
+        private HSBColor HSBcol;
 
         public void init() // all instances will be prepared
         {
-            //HSBcol = new HSB();
+            HSBcol = new HSBColor();
            // setSize(800, 600);
             finished = false;
             //addMouseListener(this);
@@ -166,8 +167,8 @@ namespace Mandelbrot
             x1 = Width;
             y1 = Height;
             xy = (float)x1 / (float)y1;
-            picture.CreateControl();        //picture = createImage(x1, y1);
-            g1 = picture.CreateGraphics();
+            //picture.CreateControl();        //picture = createImage(x1, y1);
+            g1 = Graphics.FromImage(offScreen);
             finished = true;
         }
 
@@ -184,7 +185,7 @@ namespace Mandelbrot
         private void mandelbrot() // calculate all points
         {
             int x, y;
-                 float h, b, alt = 0.0f;
+            float h, b, alt = 0.0f;
 
             action = false;
          /* setCursor(c1);
@@ -203,17 +204,25 @@ namespace Mandelbrot
                         //djm end
                         //djm added to convert to RGB from HSB
 
-                        picture.BackColor = HSBColor.FromHSB(new HSBColor(h, 0.8f, b));     //Color(HSBColor.FromHSB(h, 0.8f, b));
+                        //g1.Clear((Color)HSBColor.FromHSB(new HSBColor(h, 0.8f, b)));     //Color(HSBColor.FromHSB(h, 0.8f, b));
                         //djm test
-                        Color col = HSBColor.FromHSB(new HSBColor(h, 0.8f, b));
+                        Mandelbrot.HSBColor hsb = new Mandelbrot.HSBColor(h * 255f, 0.8f * 255f, b * 255f);
+
+                        Color col = hsb.Color;
+                        //g1.Clear(Color.Black);
                         int red = col.R;
                         int green = col.G;
-                        int blue = col.G;
+                        int blue = col.B;
+
                         //djm 
                         alt = h;
+                        p.Color = Color.FromArgb(red, green, blue);
                     }
                     g1.DrawLine(p, x, y, x + 1, y);
+                    //g1.DrawLine(p, x, y, x + 1, y);
                 }
+            
+            offScreen.Save("Test.bmp");
          /* showStatus("Mandelbrot-Set ready - please select zoom area with pressed mouse.");
             setCursor(c2);  */
             action = true;
@@ -247,8 +256,8 @@ namespace Mandelbrot
         public Display()
         {
             InitializeComponent();
+            init();
             start();
-            initvalues();
         }
 
         private void picture_Click(object sender, EventArgs e)
@@ -259,7 +268,7 @@ namespace Mandelbrot
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            g.DrawImage(picture.Image, 0, 0, Width, Height);      //(picture, 0, 0, this);
+            g.DrawImage(offScreen, 0, 0, Width, Height);      //(picture, 0, 0, this);
             if (rectangle)
             {
                 p.Color = Color.Black;      //.setColor(Color.white);
