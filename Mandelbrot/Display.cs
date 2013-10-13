@@ -92,11 +92,9 @@ namespace Mandelbrot
                         p.Color = Color.FromArgb(red, green, blue);
                     }
                     g1.DrawLine(p, x, y, x + 1, y);
-                    //g1.DrawLine(p, x, y, x + 1, y);
                 }
 
             offScreen.Save("Test.bmp");
-            Clipboard.SetImage(offScreen);
 
             Text = "Mandelbrot-Set ready - please select zoom area with pressed mouse.";
             /* setCursor(c2);  */
@@ -162,7 +160,7 @@ namespace Mandelbrot
         private void mousePressed(object sender, MouseEventArgs e)
         {
             //e.consume();
-            action = true;
+            action = (e.Button == MouseButtons.Right) ? false : true;
             if (action)
             {
                 xs = e.X;
@@ -221,6 +219,31 @@ namespace Mandelbrot
                 ye = e.Y;
                 rectangle = true;
                 Refresh();      //repaint();
+            }
+        }
+
+        private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetImage(offScreen);
+        }
+
+        private void saveFile_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string saveFile = "";
+            saveImageDialog.Title = "Save current display to image file";
+            saveImageDialog.FileName = "";
+
+            saveImageDialog.Filter = "Bitmap Files|*.bmp";
+
+            if (saveImageDialog.ShowDialog() != DialogResult.Cancel)
+            {
+                saveFile = saveImageDialog.FileName;
+                offScreen.Save(saveFile, System.Drawing.Imaging.ImageFormat.Bmp);
             }
         }
     }
