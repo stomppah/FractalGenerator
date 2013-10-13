@@ -43,8 +43,10 @@
             this.picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picture.TabIndex = 0;
             this.picture.TabStop = false;
-            this.picture.Click += new System.EventHandler(this.picture_Click);
             this.picture.Paint += new System.Windows.Forms.PaintEventHandler(this.picture_Paint);
+            this.picture.MouseDown += new System.Windows.Forms.MouseEventHandler(this.mousePressed);
+            this.picture.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseDragged);
+            this.picture.MouseUp += new System.Windows.Forms.MouseEventHandler(this.mouseReleased);
             // 
             // Display
             // 

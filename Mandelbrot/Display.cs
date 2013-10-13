@@ -67,7 +67,7 @@ namespace Mandelbrot
                 return FromHSB(this);
             }
         }
-        
+
         public static Color FromHSB(HSBColor hsbColor)
         {
             float r = hsbColor.b;
@@ -126,27 +126,27 @@ namespace Mandelbrot
             }
 
             return Color.FromArgb
-                ( 
+                (
                     hsbColor.a,
                     (int)Math.Round(Math.Min(Math.Max(r, 0), 255)),
                     (int)Math.Round(Math.Min(Math.Max(g, 0), 255)),
                     (int)Math.Round(Math.Min(Math.Max(b, 0), 255))
                     );
         }
-       
+
     }
 
     public partial class Display : Form
     {
         private const int MAX = 256;      // max iterations
-	    private const double SX = -2.025; // start value real
-	    private const double SY = -1.125; // start value imaginary
-	    private const double EX = 0.6;    // end value real
-	    private const double EY = 1.125;  // end value imaginary
-	    private static int x1, y1, xs, ys, xe, ye;
-	    private static double xstart, ystart, xende, yende, xzoom, yzoom;
-	    private static bool action, rectangle, finished;
-	    private static float xy;
+        private const double SX = -2.025; // start value real
+        private const double SY = -1.125; // start value imaginary
+        private const double EX = 0.6;    // end value real
+        private const double EY = 1.125;  // end value imaginary
+        private static int x1, y1, xs, ys, xe, ye;
+        private static double xstart, ystart, xende, yende, xzoom, yzoom;
+        private static bool action, rectangle, finished;
+        private static float xy;
         private Image offScreen;
         private Graphics g1;
         private Pen p;
@@ -185,8 +185,8 @@ namespace Mandelbrot
             float h, b, alt = 0.0f;
 
             action = false;
-         /* setCursor(c1); */
-            Text = "Mandelbrot-Set will be produced - please wait..."; 
+            /* setCursor(c1); */
+            Text = "Mandelbrot-Set will be produced - please wait...";
             for (x = 0; x < x1; x += 2)
                 for (y = 0; y < y1; y++)
                 {
@@ -218,12 +218,12 @@ namespace Mandelbrot
                     g1.DrawLine(p, x, y, x + 1, y);
                     //g1.DrawLine(p, x, y, x + 1, y);
                 }
-            
+
             offScreen.Save("Test.bmp");
             Clipboard.SetImage(offScreen);
 
             Text = "Mandelbrot-Set ready - please select zoom area with pressed mouse.";
-         /* setCursor(c2);  */
+            /* setCursor(c2);  */
             action = true;
         }
 
@@ -259,11 +259,6 @@ namespace Mandelbrot
             start();
         }
 
-        private void picture_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void picture_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -278,10 +273,76 @@ namespace Mandelbrot
                 }
                 else
                 {
-                    if (ys < ye) g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys) );          //drawRect(xe, ys, (xs - xe), (ye - ys));
+                    if (ys < ye) g.DrawRectangle(p, xe, ys, (xs - xe), (ye - ys));          //drawRect(xe, ys, (xs - xe), (ye - ys));
                     else g.DrawRectangle(p, xe, ye, (xs - xe), (ys - ye));
                 }
             }
         }
+
+        private void mousePressed(object sender, MouseEventArgs e)
+        {
+            //e.consume();
+            action = true;
+            if (action)
+            {
+                xs = e.X;
+                ys = e.Y;
+            }
+        }
+
+        private void mouseReleased(object sender, MouseEventArgs e)
+        {
+            int z, w;
+
+            //e.consume();
+            if (action)
+            {
+                xe = e.X;
+                ye = e.Y;
+                if (xs > xe)
+                {
+                    z = xs;
+                    xs = xe;
+                    xe = z;
+                }
+                if (ys > ye)
+                {
+                    z = ys;
+                    ys = ye;
+                    ye = z;
+                }
+                w = (xe - xs);
+                z = (ye - ys);
+                if ((w < 2) && (z < 2)) initvalues();
+                else
+                {
+                    if (((float)w > (float)z * xy)) ye = (int)((float)ys + (float)w / xy);
+                    else xe = (int)((float)xs + (float)z * xy);
+                    xende = xstart + xzoom * (double)xe;
+                    yende = ystart + yzoom * (double)ye;
+                    xstart += xzoom * (double)xs;
+                    ystart += yzoom * (double)ys;
+                }
+                xzoom = (xende - xstart) / (double)x1;
+                yzoom = (yende - ystart) / (double)y1;
+                mandelbrot();
+                rectangle = false;
+                Refresh();      //repaint();
+            }
+            action = false;
+        }
+
+        private void mouseDragged(object sender, MouseEventArgs e)
+        {
+            //e.consume();
+            if (action)
+            {
+                xe = e.X;
+                ye = e.Y;
+                rectangle = true;
+                Refresh();      //repaint();
+            }
+        }
     }
+
 }
