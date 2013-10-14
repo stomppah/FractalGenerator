@@ -227,10 +227,10 @@ namespace Mandelbrot
             Clipboard.SetImage(offScreen);
         }
 
-        private void saveFile_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
+        //private void saveFile_FileOk(object sender, CancelEventArgs e)
+        //{
+            
+        //}
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
