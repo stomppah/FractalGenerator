@@ -26,6 +26,7 @@ namespace Mandelbrot
         private Graphics g1;
         private Pen p;
         //private Cursor c1, c2;
+        private State quickState, undoState, redoState; 
 
         public void init() // all instances will be prepared
         {
@@ -52,6 +53,7 @@ namespace Mandelbrot
             initvalues();
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
+            //undoState = new State(xzoom, yzoom);
             mandelbrot();
         }
 
@@ -227,10 +229,10 @@ namespace Mandelbrot
             Clipboard.SetImage(offScreen);
         }
 
-        //private void saveFile_FileOk(object sender, CancelEventArgs e)
-        //{
-            
-        //}
+        private void saveFile_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -245,6 +247,30 @@ namespace Mandelbrot
                 saveFile = saveImageDialog.FileName;
                 offScreen.Save(saveFile, System.Drawing.Imaging.ImageFormat.Bmp);
             }
+        }
+
+        private void quicksaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            quickState = new State(x1,y1, xstart, ystart, xende, yende);
+            quickState.QuickSave();
+        }
+
+        private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            x1 = quickState.x1;
+            y1 = quickState.y1;
+
+            xstart = quickState.xstart;
+            ystart = quickState.ystart;
+
+            xende = quickState.xende;
+            yende = quickState.yende;
+
+            xzoom = (quickState.xende - quickState.xstart) / (double)quickState.x1;
+            yzoom = (quickState.yende - quickState.ystart) / (double)quickState.y1;
+
+            mandelbrot();
+            Refresh();
         }
     }
 

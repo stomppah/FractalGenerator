@@ -35,6 +35,9 @@
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.quicksaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quickloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +72,10 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyToClipboardToolStripMenuItem,
-            this.saveToolStripMenuItem});
+            this.saveToolStripMenuItem,
+            this.toolStripSeparator1,
+            this.quicksaveToolStripMenuItem,
+            this.quickloadToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -87,6 +93,25 @@
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.saveToolStripMenuItem.Text = "Save As...";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(166, 6);
+            // 
+            // quicksaveToolStripMenuItem
+            // 
+            this.quicksaveToolStripMenuItem.Name = "quicksaveToolStripMenuItem";
+            this.quicksaveToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.quicksaveToolStripMenuItem.Text = "Quicksave";
+            this.quicksaveToolStripMenuItem.Click += new System.EventHandler(this.quicksaveToolStripMenuItem_Click);
+            // 
+            // quickloadToolStripMenuItem
+            // 
+            this.quickloadToolStripMenuItem.Name = "quickloadToolStripMenuItem";
+            this.quickloadToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.quickloadToolStripMenuItem.Text = "Quickload";
+            this.quickloadToolStripMenuItem.Click += new System.EventHandler(this.quickloadToolStripMenuItem_Click);
             // 
             // Display
             // 
@@ -120,6 +145,9 @@
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveImageDialog;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem quicksaveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quickloadToolStripMenuItem;
     }
 }
 
