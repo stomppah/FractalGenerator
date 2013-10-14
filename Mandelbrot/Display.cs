@@ -26,7 +26,9 @@ namespace Mandelbrot
         private Graphics g1;
         private Pen p;
         //private Cursor c1, c2;
-        private State quickState, undoState, redoState; 
+        private State quickState;
+        private List<State> tracedRoute = new List<State>();
+        private bool colorCycling = false;
 
         public void init() // all instances will be prepared
         {
@@ -53,7 +55,9 @@ namespace Mandelbrot
             initvalues();
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-            //undoState = new State(xzoom, yzoom);
+
+            tracedRoute.Add(new State(x1, y1, xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
+            
             mandelbrot();
         }
 
@@ -84,7 +88,6 @@ namespace Mandelbrot
                         Mandelbrot.HSBColor hsb = new Mandelbrot.HSBColor(h * 255f, 0.8f * 255f, b * 255f);
 
                         Color col = hsb.Color;
-                        //g1.Clear(Color.Black);
                         int red = col.R;
                         int green = col.G;
                         int blue = col.B;
@@ -95,8 +98,6 @@ namespace Mandelbrot
                     }
                     g1.DrawLine(p, x, y, x + 1, y);
                 }
-
-            offScreen.Save("Test.bmp");
 
             Text = "Mandelbrot-Set ready - please select zoom area with pressed mouse.";
             /* setCursor(c2);  */
@@ -271,6 +272,11 @@ namespace Mandelbrot
 
             mandelbrot();
             Refresh();
+        }
+
+        private void cycleColoursToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 
