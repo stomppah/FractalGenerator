@@ -9,7 +9,7 @@ namespace Mandelbrot
 {
     class State
     {
-        private int _xe, _ye, _y1, _x1;
+        private int _x1, _y1;
         private double _xende, _yende, _xstart, _ystart;
  
         public State (int x1, int y1, double xstart, double ystart, double xende, double yende)

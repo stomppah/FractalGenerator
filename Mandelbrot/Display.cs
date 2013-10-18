@@ -254,6 +254,7 @@ namespace Mandelbrot
         {
             quickState = new State(x1,y1, xstart, ystart, xende, yende);
             quickState.QuickSave();
+            quickloadToolStripMenuItem.Enabled = true;
         }
 
         private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
