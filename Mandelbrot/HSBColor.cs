@@ -61,6 +61,31 @@ namespace Mandelbrot
             }
         }
 
+        public static Color ShiftHue(Color c, float hueDelta)
+        {
+            HSBColor hsb = HSBColor.FromColor(c);
+            hsb.h += hueDelta;
+            hsb.h = Math.Min(Math.Max(hsb.h, 0), 255);
+            return FromHSB(hsb);
+        }
+
+        public static Color ShiftSaturation(Color c, float saturationDelta)
+        {
+            HSBColor hsb = HSBColor.FromColor(c);
+            hsb.s += saturationDelta;
+            hsb.s = Math.Min(Math.Max(hsb.s, 0), 255);
+            return FromHSB(hsb);
+        }
+
+
+        public static Color ShiftBrighness(Color c, float brightnessDelta)
+        {
+            HSBColor hsb = HSBColor.FromColor(c);
+            hsb.b += brightnessDelta;
+            hsb.b = Math.Min(Math.Max(hsb.b, 0), 255);
+            return FromHSB(hsb);
+        }
+
         public static Color FromHSB(HSBColor hsbColor)
         {
             float r = hsbColor.b;
@@ -125,6 +150,60 @@ namespace Mandelbrot
                     (int)Math.Round(Math.Min(Math.Max(g, 0), 255)),
                     (int)Math.Round(Math.Min(Math.Max(b, 0), 255))
                     );
+        }
+
+        public static HSBColor FromColor(Color color)
+        {
+            HSBColor ret = new HSBColor(0f, 0f, 0f);
+            ret.a = color.A;
+
+            float r = color.R;
+            float g = color.G;
+            float b = color.B;
+
+            float max = Math.Max(r, Math.Max(g, b));
+
+            if (max <= 0)
+            {
+                return ret;
+            }
+
+            float min = Math.Min(r, Math.Min(g, b));
+            float dif = max - min;
+
+            if (max > min)
+            {
+                if (g == max)
+                {
+                    ret.h = (b - r) / dif * 60f + 120f;
+                }
+                else if (b == max)
+                {
+                    ret.h = (r - g) / dif * 60f + 240f;
+                }
+                else if (b > g)
+                {
+                    ret.h = (g - b) / dif * 60f + 360f;
+                }
+                else
+                {
+                    ret.h = (g - b) / dif * 60f;
+                }
+                if (ret.h < 0)
+                {
+                    ret.h = ret.h + 360f;
+                }
+            }
+            else
+            {
+                ret.h = 0;
+            }
+
+            ret.h *= 255f / 360f;
+            ret.s = (dif / max) * 255f;
+            ret.b = max;
+
+            return ret;
         }
 
     }
