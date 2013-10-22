@@ -38,9 +38,9 @@ namespace Mandelbrot
         public double xende { get { return _xende; } }
         public double yende { get { return _yende; } }
 
-        public void QuickSave ()
+        public void QuickSave (int number)
         {
-            using (XmlWriter writer = XmlWriter.Create("quicksave.xml"))
+            using (XmlWriter writer = XmlWriter.Create("slot" + number + ".xml"))
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("State");
@@ -59,9 +59,9 @@ namespace Mandelbrot
             }
         }
 
-        public void QuickLoad()
+        public void QuickLoad(int number)
         {
-            using (XmlReader reader = XmlReader.Create("quicksave.xml"))
+            using (XmlReader reader = XmlReader.Create("slot" + number + ".xml"))
             {
                 reader.Read();
                 reader.ReadOuterXml();
@@ -81,6 +81,12 @@ namespace Mandelbrot
                 reader.Read();
                 this._yende = Convert.ToDouble(reader.Value);
             }
+        }
+
+        // used to store each zoom level the user goes down to - may be a duff idea
+        public void TraceRoute(int x1, int y1, double xstart, double ystart, double xende, double yende)
+        {
+            //@TODO
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,30 +23,35 @@ namespace Mandelbrot
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
         private static bool action, rectangle, finished;
         private static float xy;
-        private Image offScreen;
+        private Bitmap offScreen, offScreenIndexed;
+        private ColorPalette palette;
         private Graphics g1;
         private Pen p;
         //private Cursor c1, c2;
-        private State quickState;
+        private State state;
         private List<State> tracedRoute = new List<State>();
-        private bool colorCycling = false;
+
+        private int saveSlot = 1;
+
 
         public void init() // all instances will be prepared
         {
             finished = false;
             action = false;
-            // setSize(800, 600);
-            //addMouseListener(this);
-            //addMouseMotionListener(this);
-            //c1 = new Cursor(Cursor.WAIT_CURSOR);
-            //c2 = new Cursor(Cursor.CROSSHAIR_CURSOR);
             p = new Pen(Color.Black);
+            setZoomLevel();
+            finished = true;
+        }
+
+        // pulled this out to allow me to explictly set the zoom level - used for window resize changes an
+        private void setZoomLevel()
+        {
             x1 = Width;
             y1 = Height;
+
             xy = (float)x1 / (float)y1;
-            offScreen = new Bitmap(picture.Width, picture.Height);
-            g1 = Graphics.FromImage(offScreen);     //picture = createImage(x1, y1);
-            finished = true;
+            offScreen = new Bitmap(picture.Width, picture.Height); //picture = createImage(x1, y1);
+            g1 = Graphics.FromImage(offScreen);
         }
 
         public void start()
@@ -133,17 +139,19 @@ namespace Mandelbrot
         {
             InitializeComponent();
             init();
+            state = new State(x1, y1, xstart, ystart, xende, yende);
             start();
         }
 
-        private void picture_Paint(object sender, PaintEventArgs e)
+        private void pictureBoxPaint(object sender, PaintEventArgs e)
         {
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
             e.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
             e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
             Graphics g = e.Graphics;
-            g.DrawImage(offScreen, 0, 0);      //(picture, 0, 0, this);
+            g.DrawImage(colourCycleTimer.Enabled ? offScreenIndexed : offScreen, 0, 0);      //(picture, 0, 0, this);
+
             if (rectangle)
             {
                 p.Color = Color.Black;      //.setColor(Color.white);
@@ -209,6 +217,7 @@ namespace Mandelbrot
                 mandelbrot();
                 rectangle = false;
                 Refresh();      //repaint();
+                offScreenIndexed = null;
             }
             action = false;
         }
@@ -230,11 +239,6 @@ namespace Mandelbrot
             Clipboard.SetImage(offScreen);
         }
 
-        private void saveFile_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string saveFile = "";
@@ -252,32 +256,80 @@ namespace Mandelbrot
 
         private void quicksaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            quickState = new State(x1,y1, xstart, ystart, xende, yende);
-            quickState.QuickSave();
+            state.SetValues(x1, y1, xstart, ystart, xende, yende);
+            state.QuickSave(saveSlot);
             quickloadToolStripMenuItem.Enabled = true;
         }
 
         private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            x1 = quickState.x1;
-            y1 = quickState.y1;
+            state.QuickLoad(saveSlot);
 
-            xstart = quickState.xstart;
-            ystart = quickState.ystart;
+            x1 = state.x1;
+            y1 = state.y1;
 
-            xende = quickState.xende;
-            yende = quickState.yende;
+            xstart = state.xstart;
+            ystart = state.ystart;
 
-            xzoom = (quickState.xende - quickState.xstart) / (double)quickState.x1;
-            yzoom = (quickState.yende - quickState.ystart) / (double)quickState.y1;
+            xende = state.xende;
+            yende = state.yende;
+
+            xzoom = (state.xende - state.xstart) / (double)state.x1;
+            yzoom = (state.yende - state.ystart) / (double)state.y1;
 
             mandelbrot();
             Refresh();
         }
 
-        private void cycleColoursToolStripMenuItem_Click(object sender, EventArgs e)
+        private void cycleColoursMainMenu_Click(object sender, EventArgs e)
         {
-            
+            colourCycleTimer.Enabled = (colourCycleTimer.Enabled) ? false : true;
+        }
+
+        private void colourCycleTimer_Tick(object sender, EventArgs e)
+        {
+            offScreenIndexed = offScreenIndexed == null ? offScreen.Clone(new Rectangle(0, 0, picture.Width, picture.Height), PixelFormat.Format8bppIndexed) : offScreenIndexed;
+            palette = offScreenIndexed.Palette;
+
+            // base the default entry on the changing palette
+            palette.Entries[0] = HSBColor.ShiftHue((Color)palette.Entries[1], 20);
+
+            for (int i = 1; i < palette.Entries.Length; i++)
+            {
+                palette.Entries[i] = HSBColor.ShiftHue((Color)palette.Entries[i], 20);
+            }
+            offScreenIndexed.Palette = palette;
+            Refresh();
+        }
+
+        private void Display_Resize(object sender, EventArgs e)
+        {
+            setZoomLevel();
+            xzoom = (xende - xstart) / (double)x1;
+            yzoom = (yende - ystart) / (double)y1;
+
+           // tracedRoute.Add(new State(x1, y1, xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
+
+            mandelbrot();
+
+            // reset colour index
+            offScreenIndexed = offScreen.Clone(new Rectangle(0, 0, picture.Width, picture.Height), PixelFormat.Format8bppIndexed);
+
+            Refresh();
+        }
+
+        private void slot1Click(object sender, EventArgs e)
+        {
+            slot1MenuItem.Checked = !slot1MenuItem.Checked ? true : false;
+            slot2MenuItem.Checked = !slot2MenuItem.Checked ? true : false;
+            saveSlot = 1;
+        }
+
+        private void slot2MenuItem_Click(object sender, EventArgs e)
+        {
+            slot1MenuItem.Checked = !slot1MenuItem.Checked ? true : false;
+            slot2MenuItem.Checked = !slot2MenuItem.Checked ? true : false;
+            saveSlot = 2;
         }
     }
 
