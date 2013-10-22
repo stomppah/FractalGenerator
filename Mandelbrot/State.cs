@@ -11,8 +11,13 @@ namespace Mandelbrot
     {
         private int _x1, _y1;
         private double _xende, _yende, _xstart, _ystart;
- 
+
         public State (int x1, int y1, double xstart, double ystart, double xende, double yende)
+        {
+            SetValues(x1, y1, xstart, ystart, xende, yende);
+        }
+
+        public void SetValues(int x1, int y1, double xstart, double ystart, double xende, double yende)
         {
             this._x1 = x1;
             this._y1 = y1;
@@ -58,27 +63,24 @@ namespace Mandelbrot
         {
             using (XmlReader reader = XmlReader.Create("quicksave.xml"))
             {
+                reader.Read();
+                reader.ReadOuterXml();
+
                 reader.ReadToFollowing("X1");
-                this._x1 = Convert.ToInt32(reader.Value);
-                
-                reader.ReadToFollowing("Y1");
+                this._x1 = Convert.ToInt32(reader.ReadElementContentAsString());
+                reader.Read();
                 this._y1 = Convert.ToInt32(reader.Value);
 
                 reader.ReadToFollowing("xstart");
-                this._xstart = Convert.ToDouble(reader.Value);
-                reader.ReadToFollowing("ystart");
-                this._xstart = Convert.ToDouble(reader.Value);
+                this._xstart = Convert.ToDouble(reader.ReadElementContentAsString());
+                reader.Read();
+                this._ystart = Convert.ToDouble(reader.Value);
 
                 reader.ReadToFollowing("xende");
-                this._xende = Convert.ToDouble(reader.Value);
-                reader.ReadToFollowing("yende");
+                this._xende = Convert.ToDouble(reader.ReadElementContentAsString());
+                reader.Read();
                 this._yende = Convert.ToDouble(reader.Value);
             }
-        }
-
-        public void TraceRoute(int x1, int y1, double xstart, double ystart, double xende, double yende) 
-        {
-
         }
 
     }
