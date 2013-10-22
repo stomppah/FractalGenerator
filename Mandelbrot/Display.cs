@@ -145,10 +145,6 @@ namespace Mandelbrot
 
         private void pictureBoxPaint(object sender, PaintEventArgs e)
         {
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            e.Graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-            e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-
             Graphics g = e.Graphics;
             g.DrawImage(colourCycleTimer.Enabled ? offScreenIndexed : offScreen, 0, 0);      //(picture, 0, 0, this);
 
@@ -318,7 +314,7 @@ namespace Mandelbrot
             Refresh();
         }
 
-        private void slot1Click(object sender, EventArgs e)
+        private void slot1MenuItem_Click(object sender, EventArgs e)
         {
             slot1MenuItem.Checked = !slot1MenuItem.Checked ? true : false;
             slot2MenuItem.Checked = !slot2MenuItem.Checked ? true : false;

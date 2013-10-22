@@ -125,7 +125,7 @@
             this.slot1MenuItem.Name = "slot1MenuItem";
             this.slot1MenuItem.Size = new System.Drawing.Size(152, 22);
             this.slot1MenuItem.Text = "1";
-            this.slot1MenuItem.Click += new System.EventHandler(this.slot1Click);
+            this.slot1MenuItem.Click += new System.EventHandler(this.slot1MenuItem_Click);
             // 
             // slot2MenuItem
             // 
@@ -159,7 +159,7 @@
             // cycleColoursToolStripMenuItem
             // 
             this.cycleColoursToolStripMenuItem.Name = "cycleColoursToolStripMenuItem";
-            this.cycleColoursToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.cycleColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.cycleColoursToolStripMenuItem.Text = "Cycle Colours";
             this.cycleColoursToolStripMenuItem.Click += new System.EventHandler(this.cycleColoursMainMenu_Click);
             // 
@@ -175,7 +175,6 @@
             this.Controls.Add(this.picture);
             this.Controls.Add(this.mainMenuStrip);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
             this.MinimumSize = new System.Drawing.Size(640, 480);
