@@ -260,6 +260,9 @@ namespace Mandelbrot
             }
         }
 
+        /*
+         * Saves current zoomed position to file
+         * */
         private void quicksaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             state.SetValues(x1, y1, xstart, ystart, xende, yende);
@@ -267,11 +270,14 @@ namespace Mandelbrot
             quickloadToolStripMenuItem.Enabled = true;
         }
 
+        /*
+         * Loads saved state from file and sets relevant globals
+         * */
         private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             state.QuickLoad(saveSlot);
-            x1 = state.x1;
-            y1 = state.y1;
+            //x1 = state.x1;
+            //y1 = state.y1;
 
             xstart = state.xstart;
             ystart = state.ystart;
@@ -285,18 +291,24 @@ namespace Mandelbrot
             refreshFractal();
         }
 
+        /*
+         * Enables/Disables Colour Cycling
+         * */
         private void cycleColoursMainMenu_Click(object sender, EventArgs e)
         {
             colourCycleTimer.Enabled = (colourCycleTimer.Enabled) ? false : true;
             cycleColoursToolStripMenuItem.Checked = !cycleColoursToolStripMenuItem.Checked ? true : false;
         }
 
+        /*
+         * Ticker used to cycle the colour palette
+         * */
         private void colourCycleTimer_Tick(object sender, EventArgs e) 
         {
             offScreenIndexed = offScreenIndexed == null ? offScreen.Clone(new Rectangle(0, 0, picture.Width, picture.Height), PixelFormat.Format8bppIndexed) : offScreenIndexed;
             palette = offScreenIndexed.Palette;
 
-            // base the default entry on the changing palette
+            // base the default entry on the changing palette - stops the centre of the fractal remaining black
             palette.Entries[0] = HSBColor.ShiftHue((Color)palette.Entries[1], 1);
 
             for (int i = 1; i < palette.Entries.Length; i++)
@@ -308,6 +320,9 @@ namespace Mandelbrot
             Refresh();
         }
 
+        /*
+         * Redraws and resizes the fractal baed on new window size
+         * */
         private void Display_Resize(object sender, EventArgs e)
         {
             setZoomLevel();
@@ -344,10 +359,17 @@ namespace Mandelbrot
             saveSlot = 2;
         }
 
+        /*
+         * Called when a keypress is detected by the system
+         * */
         private void Display_KeyPress(object sender, KeyPressEventArgs e)
         {
             switch (e.KeyChar.ToString())
             {
+                    /*
+                     * Zooms out to the previous point, and removes the last postion from the stack.
+                     * @TODO: Currently not working :(
+                     * */
                 case "-":
                     State tmp = (State)zoomLevels.ElementAt(zoomLevels.Count - 2);;
 

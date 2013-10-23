@@ -40,7 +40,7 @@ namespace Mandelbrot
         public double xende { get { return _xende; } }
         public double yende { get { return _yende; } }
 
-        /**
+        /*
          * Saves the current save to the selected slot.
          * @TODO: Rewrite this.
          * */
@@ -65,7 +65,7 @@ namespace Mandelbrot
             }
         }
 
-        /**
+        /*
          * Saves the current save to the selected slot.
          * @TODO: Rewrite this, bit hacky.
          * */
