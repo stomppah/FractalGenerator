@@ -49,7 +49,17 @@ namespace Mandelbrot
             y1 = Height;
 
             xy = (float)x1 / (float)y1;
-            offScreen = new Bitmap(picture.Width, picture.Height); //picture = createImage(x1, y1);
+
+            try
+            {
+                offScreen = new Bitmap(picture.Width, picture.Height); //picture = createImage(x1, y1);
+            }
+            //catches an error when window is minimized
+            catch (ArgumentException e) 
+            { 
+                Console.WriteLine(e.StackTrace); 
+            }
+
             g1 = Graphics.FromImage(offScreen);
         }
 
@@ -306,8 +316,16 @@ namespace Mandelbrot
 
             mandelbrot();
 
-            // reset colour index
-            offScreenIndexed = offScreen.Clone(new Rectangle(0, 0, picture.Width, picture.Height), PixelFormat.Format8bppIndexed);
+            try
+            {
+                // reset colour index
+                offScreenIndexed = offScreen.Clone(new Rectangle(0, 0, picture.Width, picture.Height), PixelFormat.Format8bppIndexed);
+            }
+            //catches an error when window is minimized
+            catch (ArgumentException error)
+            {
+                Console.WriteLine(error.StackTrace);
+            }
 
             Refresh();
         }
