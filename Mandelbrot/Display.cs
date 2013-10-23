@@ -23,14 +23,13 @@ namespace Mandelbrot
         private static double xstart, ystart, xende, yende, xzoom, yzoom;
         private static bool action, rectangle, finished;
         private static float xy;
+
         private Bitmap offScreen, offScreenIndexed;
         private ColorPalette palette;
         private Graphics g1;
         private Pen p;
-        //private Cursor c1, c2;
         private State state;
-        private List<State> tracedRoute = new List<State>();
-
+        private List<State> zoomLevels = new List<State>();
         private int saveSlot = 1;
 
 
@@ -62,7 +61,7 @@ namespace Mandelbrot
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
 
-            tracedRoute.Add(new State(x1, y1, xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
+            zoomLevels.Add(new State(x1, y1, xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
             
             mandelbrot();
         }
@@ -98,7 +97,6 @@ namespace Mandelbrot
                         int green = col.G;
                         int blue = col.B;
 
-                        //djm 
                         alt = h;
                         p.Color = Color.FromArgb(red, green, blue);
                     }
@@ -106,8 +104,6 @@ namespace Mandelbrot
                 }
 
             Text = "Mandelbrot-Set ready - please select zoom area with pressed mouse.";
-            /* setCursor(c2);  */
-
         }
 
         private float pointcolour(double xwert, double ywert) // color value from 0.0 to 1.0 by iterations
@@ -210,9 +206,13 @@ namespace Mandelbrot
                 }
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
+
+                zoomLevels.Add(new State(x1, y1, xstart, ystart, xende, yende));
+
                 mandelbrot();
                 rectangle = false;
                 Refresh();      //repaint();
+
                 offScreenIndexed = null;
             }
             action = false;
@@ -260,7 +260,6 @@ namespace Mandelbrot
         private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             state.QuickLoad(saveSlot);
-
             x1 = state.x1;
             y1 = state.y1;
 
@@ -273,28 +272,29 @@ namespace Mandelbrot
             xzoom = (state.xende - state.xstart) / (double)state.x1;
             yzoom = (state.yende - state.ystart) / (double)state.y1;
 
-            mandelbrot();
-            Refresh();
+            refreshFractal();
         }
 
         private void cycleColoursMainMenu_Click(object sender, EventArgs e)
         {
             colourCycleTimer.Enabled = (colourCycleTimer.Enabled) ? false : true;
+            cycleColoursToolStripMenuItem.Checked = !cycleColoursToolStripMenuItem.Checked ? true : false;
         }
 
-        private void colourCycleTimer_Tick(object sender, EventArgs e)
+        private void colourCycleTimer_Tick(object sender, EventArgs e) 
         {
             offScreenIndexed = offScreenIndexed == null ? offScreen.Clone(new Rectangle(0, 0, picture.Width, picture.Height), PixelFormat.Format8bppIndexed) : offScreenIndexed;
             palette = offScreenIndexed.Palette;
 
             // base the default entry on the changing palette
-            palette.Entries[0] = HSBColor.ShiftHue((Color)palette.Entries[1], 20);
+            palette.Entries[0] = HSBColor.ShiftHue((Color)palette.Entries[1], 1);
 
             for (int i = 1; i < palette.Entries.Length; i++)
             {
-                palette.Entries[i] = HSBColor.ShiftHue((Color)palette.Entries[i], 20);
+                palette.Entries[i] = HSBColor.ShiftHue((Color)palette.Entries[i], 1);
             }
             offScreenIndexed.Palette = palette;
+
             Refresh();
         }
 
@@ -303,8 +303,6 @@ namespace Mandelbrot
             setZoomLevel();
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
-
-           // tracedRoute.Add(new State(x1, y1, xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
 
             mandelbrot();
 
@@ -326,6 +324,36 @@ namespace Mandelbrot
             slot1MenuItem.Checked = !slot1MenuItem.Checked ? true : false;
             slot2MenuItem.Checked = !slot2MenuItem.Checked ? true : false;
             saveSlot = 2;
+        }
+
+        private void Display_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            switch (e.KeyChar.ToString())
+            {
+                case "-":
+                    State tmp = (State)zoomLevels.ElementAt(zoomLevels.Count - 2);;
+
+                    zoomLevels.RemoveAt(zoomLevels.Count - 1);
+
+                    xstart = tmp.xstart;
+                    ystart = tmp.ystart;
+
+                    xende = tmp.xende;
+                    yende = tmp.yende;
+
+                    xzoom = (tmp.xende - tmp.xstart) / (double)x1;
+                    yzoom = (tmp.yende - tmp.ystart) / (double)y1;
+
+                    refreshFractal();
+                    
+                    break;
+            }
+        }
+
+        private void refreshFractal()
+        {
+            mandelbrot();
+            Refresh();
         }
     }
 

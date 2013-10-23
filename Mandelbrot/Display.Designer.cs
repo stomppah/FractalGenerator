@@ -72,6 +72,7 @@
             this.viewToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
+            this.mainMenuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.mainMenuStrip.Size = new System.Drawing.Size(800, 24);
             this.mainMenuStrip.TabIndex = 1;
             this.mainMenuStrip.Text = "menuStrip1";
@@ -123,14 +124,14 @@
             this.slot1MenuItem.Checked = true;
             this.slot1MenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.slot1MenuItem.Name = "slot1MenuItem";
-            this.slot1MenuItem.Size = new System.Drawing.Size(152, 22);
+            this.slot1MenuItem.Size = new System.Drawing.Size(80, 22);
             this.slot1MenuItem.Text = "1";
             this.slot1MenuItem.Click += new System.EventHandler(this.slot1MenuItem_Click);
             // 
             // slot2MenuItem
             // 
             this.slot2MenuItem.Name = "slot2MenuItem";
-            this.slot2MenuItem.Size = new System.Drawing.Size(152, 22);
+            this.slot2MenuItem.Size = new System.Drawing.Size(80, 22);
             this.slot2MenuItem.Text = "2";
             this.slot2MenuItem.Click += new System.EventHandler(this.slot2MenuItem_Click);
             // 
@@ -159,12 +160,13 @@
             // cycleColoursToolStripMenuItem
             // 
             this.cycleColoursToolStripMenuItem.Name = "cycleColoursToolStripMenuItem";
-            this.cycleColoursToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cycleColoursToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.cycleColoursToolStripMenuItem.Text = "Cycle Colours";
             this.cycleColoursToolStripMenuItem.Click += new System.EventHandler(this.cycleColoursMainMenu_Click);
             // 
             // colourCycleTimer
             // 
+            this.colourCycleTimer.Interval = 25;
             this.colourCycleTimer.Tick += new System.EventHandler(this.colourCycleTimer_Tick);
             // 
             // Display
@@ -181,6 +183,7 @@
             this.Name = "Display";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Display";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Display_KeyPress);
             this.Resize += new System.EventHandler(this.Display_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.mainMenuStrip.ResumeLayout(false);

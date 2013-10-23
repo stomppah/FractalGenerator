@@ -9,7 +9,9 @@ namespace Mandelbrot
 {
     class State
     {
+        // Width and height of the display, think these can be removed.
         private int _x1, _y1;
+
         private double _xende, _yende, _xstart, _ystart;
 
         public State (int x1, int y1, double xstart, double ystart, double xende, double yende)
@@ -38,6 +40,10 @@ namespace Mandelbrot
         public double xende { get { return _xende; } }
         public double yende { get { return _yende; } }
 
+        /**
+         * Saves the current save to the selected slot.
+         * @TODO: Rewrite this.
+         * */
         public void QuickSave (int number)
         {
             using (XmlWriter writer = XmlWriter.Create("slot" + number + ".xml"))
@@ -59,6 +65,10 @@ namespace Mandelbrot
             }
         }
 
+        /**
+         * Saves the current save to the selected slot.
+         * @TODO: Rewrite this, bit hacky.
+         * */
         public void QuickLoad(int number)
         {
             using (XmlReader reader = XmlReader.Create("slot" + number + ".xml"))
@@ -81,12 +91,6 @@ namespace Mandelbrot
                 reader.Read();
                 this._yende = Convert.ToDouble(reader.Value);
             }
-        }
-
-        // used to store each zoom level the user goes down to - may be a duff idea
-        public void TraceRoute(int x1, int y1, double xstart, double ystart, double xende, double yende)
-        {
-            //@TODO
         }
 
     }
