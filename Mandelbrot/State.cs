@@ -9,30 +9,21 @@ namespace Mandelbrot
 {
     class State
     {
-        // Width and height of the display, think these can be removed.
-        private int _x1, _y1;
-
         private double _xende, _yende, _xstart, _ystart;
 
-        public State (int x1, int y1, double xstart, double ystart, double xende, double yende)
+        public State (double xstart, double ystart, double xende, double yende)
         {
-            SetValues(x1, y1, xstart, ystart, xende, yende);
+            SetValues(xstart, ystart, xende, yende);
         }
 
-        public void SetValues(int x1, int y1, double xstart, double ystart, double xende, double yende)
+        public void SetValues(double xstart, double ystart, double xende, double yende)
         {
-            this._x1 = x1;
-            this._y1 = y1;
-
             this._xstart = xstart;
             this._ystart = ystart;
 
             this._xende = xende;
             this._yende = yende;
         }
-
-        public int x1 { get { return _x1; } }
-        public int y1 { get { return _y1; } }
 
         public double xstart { get { return _xstart; } }
         public double ystart { get { return _ystart; } }
@@ -50,9 +41,6 @@ namespace Mandelbrot
             {
                 writer.WriteStartDocument();
                 writer.WriteStartElement("State");
-
-                writer.WriteElementString("X1", this._x1.ToString());
-                writer.WriteElementString("Y1", this._y1.ToString());
 
                 writer.WriteElementString("xstart", this._xstart.ToString());
                 writer.WriteElementString("ystart", this._ystart.ToString());
@@ -75,11 +63,6 @@ namespace Mandelbrot
             {
                 reader.Read();
                 reader.ReadOuterXml();
-
-                reader.ReadToFollowing("X1");
-                this._x1 = Convert.ToInt32(reader.ReadElementContentAsString());
-                reader.Read();
-                this._y1 = Convert.ToInt32(reader.Value);
 
                 reader.ReadToFollowing("xstart");
                 this._xstart = Convert.ToDouble(reader.ReadElementContentAsString());
