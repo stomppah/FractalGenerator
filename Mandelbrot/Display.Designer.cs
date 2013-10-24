@@ -193,13 +193,13 @@
             // 
             this.maxIterationsSlider.LargeChange = 10;
             this.maxIterationsSlider.Location = new System.Drawing.Point(743, 508);
-            this.maxIterationsSlider.Maximum = 4096;
+            this.maxIterationsSlider.Maximum = 16384;
             this.maxIterationsSlider.Minimum = 512;
             this.maxIterationsSlider.Name = "maxIterationsSlider";
             this.maxIterationsSlider.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.maxIterationsSlider.Size = new System.Drawing.Size(45, 104);
             this.maxIterationsSlider.TabIndex = 2;
-            this.maxIterationsSlider.TickFrequency = 1024;
+            this.maxIterationsSlider.TickFrequency = 2048;
             this.maxIterationsSlider.TickStyle = System.Windows.Forms.TickStyle.Both;
             this.maxIterationsSlider.Value = 512;
             this.maxIterationsSlider.Visible = false;
