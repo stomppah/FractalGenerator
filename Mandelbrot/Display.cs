@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,7 +11,7 @@ namespace Mandelbrot
 
     public partial class Display : Form
     {
-        private const int MAX = 1024;      // max iterations
+        private int MAX = 512;      // max iterations
         private const double SX = -2.025; // start value real
         private const double SY = -1.125; // start value imaginary
         private const double EX = 0.6;    // end value real
@@ -284,33 +285,40 @@ namespace Mandelbrot
          * */
         private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            state.QuickLoad(saveSlot);
-
-            //disable colour cycling - wont work if enabled
-            colourCycleTimer.Enabled = false;
-            cycleColoursToolStripMenuItem.Checked = false;
-
-            //remove indexed image - important
-            offScreenIndexed = null;
-
-            xstart = state.xstart;
-            ystart = state.ystart;
-
-            xende = state.xende;
-            yende = state.yende;
-
-            xzoom = (xende - xstart) / (double)x1;
-            yzoom = (yende - ystart) / (double)y1;
-
-            //reset list
-            for (int i = 0; i < zoomLevels.Count - 1; i++) 
+            try
             {
-                zoomLevels.RemoveAt(i);
-            }
-      
-            zoomLevels.Add(new State(xstart, ystart, xende, yende));
+                state.QuickLoad(saveSlot);
 
-            refreshFractal();
+                //disable colour cycling - wont work if enabled
+                colourCycleTimer.Enabled = false;
+                cycleColoursToolStripMenuItem.Checked = false;
+
+                //remove indexed image - important
+                offScreenIndexed = null;
+
+                xstart = state.xstart;
+                ystart = state.ystart;
+
+                xende = state.xende;
+                yende = state.yende;
+
+                xzoom = (xende - xstart) / (double)x1;
+                yzoom = (yende - ystart) / (double)y1;
+
+                //reset list
+                for (int i = 0; i < zoomLevels.Count - 1; i++)
+                {
+                    zoomLevels.RemoveAt(i);
+                }
+
+                zoomLevels.Add(new State(xstart, ystart, xende, yende));
+
+                refreshFractal();
+            }
+            catch (FileNotFoundException error)
+            {
+                Console.WriteLine(error.StackTrace);
+            }
         }
 
         /*
@@ -419,6 +427,26 @@ namespace Mandelbrot
 
                     break;
             }
+        }
+
+        private void maxIterationsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            maxIterationsToolStripMenuItem.Checked = !maxIterationsToolStripMenuItem.Checked ? true : false;
+            maxIterationsSlider.Visible = !maxIterationsSlider.Visible ? true : false;
+        }
+
+        private void maxIterations_Scroll(object sender, EventArgs e)
+        {
+            //disable colour cycling - wont work if enabled
+            colourCycleTimer.Enabled = false;
+            cycleColoursToolStripMenuItem.Checked = false;
+
+            //remove indexed image - important
+            offScreenIndexed = null;
+
+            MAX = maxIterationsSlider.Value;
+            refreshFractal();
+
         }
 
         private void refreshFractal()

@@ -43,10 +43,14 @@
             this.quickloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cycleColoursToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.maxIterationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveImageDialog = new System.Windows.Forms.SaveFileDialog();
             this.colourCycleTimer = new System.Windows.Forms.Timer(this.components);
+            this.maxIterationsSlider = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.picture)).BeginInit();
             this.mainMenuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxIterationsSlider)).BeginInit();
             this.SuspendLayout();
             // 
             // picture
@@ -69,7 +73,8 @@
             // 
             this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
             this.mainMenuStrip.Name = "mainMenuStrip";
             this.mainMenuStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
@@ -164,16 +169,48 @@
             this.cycleColoursToolStripMenuItem.Text = "Cycle Colours";
             this.cycleColoursToolStripMenuItem.Click += new System.EventHandler(this.cycleColoursMainMenu_Click);
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.maxIterationsToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // maxIterationsToolStripMenuItem
+            // 
+            this.maxIterationsToolStripMenuItem.Name = "maxIterationsToolStripMenuItem";
+            this.maxIterationsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.maxIterationsToolStripMenuItem.Text = "Max Iterations";
+            this.maxIterationsToolStripMenuItem.Click += new System.EventHandler(this.maxIterationsToolStripMenuItem_Click);
+            // 
             // colourCycleTimer
             // 
             this.colourCycleTimer.Interval = 25;
             this.colourCycleTimer.Tick += new System.EventHandler(this.colourCycleTimer_Tick);
+            // 
+            // maxIterationsSlider
+            // 
+            this.maxIterationsSlider.LargeChange = 10;
+            this.maxIterationsSlider.Location = new System.Drawing.Point(743, 508);
+            this.maxIterationsSlider.Maximum = 4096;
+            this.maxIterationsSlider.Minimum = 512;
+            this.maxIterationsSlider.Name = "maxIterationsSlider";
+            this.maxIterationsSlider.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.maxIterationsSlider.Size = new System.Drawing.Size(45, 104);
+            this.maxIterationsSlider.TabIndex = 2;
+            this.maxIterationsSlider.TickFrequency = 1024;
+            this.maxIterationsSlider.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.maxIterationsSlider.Value = 512;
+            this.maxIterationsSlider.Visible = false;
+            this.maxIterationsSlider.Scroll += new System.EventHandler(this.maxIterations_Scroll);
             // 
             // Display
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 624);
+            this.Controls.Add(this.maxIterationsSlider);
             this.Controls.Add(this.picture);
             this.Controls.Add(this.mainMenuStrip);
             this.Cursor = System.Windows.Forms.Cursors.Default;
@@ -188,6 +225,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picture)).EndInit();
             this.mainMenuStrip.ResumeLayout(false);
             this.mainMenuStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.maxIterationsSlider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,6 +248,9 @@
         private System.Windows.Forms.ToolStripMenuItem slotToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem slot1MenuItem;
         private System.Windows.Forms.ToolStripMenuItem slot2MenuItem;
+        private System.Windows.Forms.TrackBar maxIterationsSlider;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem maxIterationsToolStripMenuItem;
     }
 }
 
