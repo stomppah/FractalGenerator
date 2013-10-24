@@ -217,9 +217,7 @@ namespace Mandelbrot
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
 
-                /*
-                 * if zooming all the way out, clear the list
-                 * */
+                //if zooming all the way out, clear the list
                 if (xzoom == 0.0033936652847949196 && yzoom == 0.0033936651583710408)
                 {
                     for (int i = 0; i < zoomLevels.Count - 1; i++) 
