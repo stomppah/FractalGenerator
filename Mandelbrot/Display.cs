@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Mandelbrot
@@ -14,7 +10,7 @@ namespace Mandelbrot
 
     public partial class Display : Form
     {
-        private const int MAX = 256;      // max iterations
+        private const int MAX = 1024;      // max iterations
         private const double SX = -2.025; // start value real
         private const double SY = -1.125; // start value imaginary
         private const double EX = 0.6;    // end value real
@@ -71,7 +67,7 @@ namespace Mandelbrot
             xzoom = (xende - xstart) / (double)x1;
             yzoom = (yende - ystart) / (double)y1;
 
-            zoomLevels.Add(new State(x1, y1, xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
+            zoomLevels.Add(new State(xstart, ystart, xende, yende));           //begin route trace -- to allow for zooming out
             
             mandelbrot();
         }
@@ -141,11 +137,14 @@ namespace Mandelbrot
                 xstart = xende - (yende - ystart) * (double)xy;
         }
 
+        /*
+         * Contructor
+         * */
         public Display()
         {
             InitializeComponent();
             init();
-            state = new State(x1, y1, xstart, ystart, xende, yende);
+            state = new State(xstart, ystart, xende, yende);
             start();
         }
 
@@ -179,6 +178,7 @@ namespace Mandelbrot
                 xs = e.X;
                 ys = e.Y;
             }
+            
         }
 
         private void mouseReleased(object sender, MouseEventArgs e)
@@ -217,7 +217,18 @@ namespace Mandelbrot
                 xzoom = (xende - xstart) / (double)x1;
                 yzoom = (yende - ystart) / (double)y1;
 
-                zoomLevels.Add(new State(x1, y1, xstart, ystart, xende, yende));
+                /*
+                 * if zooming all the way out, clear the list
+                 * */
+                if (xzoom == 0.0033936652847949196 && yzoom == 0.0033936651583710408)
+                {
+                    for (int i = 0; i < zoomLevels.Count - 1; i++) 
+                    {
+                        zoomLevels.RemoveAt(i);
+                    }
+                    
+                }
+                zoomLevels.Add(new State(xstart, ystart, xende, yende));
 
                 mandelbrot();
                 rectangle = false;
@@ -265,7 +276,7 @@ namespace Mandelbrot
          * */
         private void quicksaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            state.SetValues(x1, y1, xstart, ystart, xende, yende);
+            state.SetValues(xstart, ystart, xende, yende);
             state.QuickSave(saveSlot);
             quickloadToolStripMenuItem.Enabled = true;
         }
@@ -276,8 +287,13 @@ namespace Mandelbrot
         private void quickloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             state.QuickLoad(saveSlot);
-            //x1 = state.x1;
-            //y1 = state.y1;
+
+            //disable colour cycling - wont work if enabled
+            colourCycleTimer.Enabled = false;
+            cycleColoursToolStripMenuItem.Checked = false;
+
+            //remove indexed image - important
+            offScreenIndexed = null;
 
             xstart = state.xstart;
             ystart = state.ystart;
@@ -285,8 +301,16 @@ namespace Mandelbrot
             xende = state.xende;
             yende = state.yende;
 
-            xzoom = (state.xende - state.xstart) / (double)state.x1;
-            yzoom = (state.yende - state.ystart) / (double)state.y1;
+            xzoom = (xende - xstart) / (double)x1;
+            yzoom = (yende - ystart) / (double)y1;
+
+            //reset list
+            for (int i = 0; i < zoomLevels.Count - 1; i++) 
+            {
+                zoomLevels.RemoveAt(i);
+            }
+      
+            zoomLevels.Add(new State(xstart, ystart, xende, yende));
 
             refreshFractal();
         }
@@ -296,7 +320,7 @@ namespace Mandelbrot
          * */
         private void cycleColoursMainMenu_Click(object sender, EventArgs e)
         {
-            colourCycleTimer.Enabled = (colourCycleTimer.Enabled) ? false : true;
+            colourCycleTimer.Enabled = !colourCycleTimer.Enabled ? true : false;
             cycleColoursToolStripMenuItem.Checked = !cycleColoursToolStripMenuItem.Checked ? true : false;
         }
 
@@ -368,12 +392,21 @@ namespace Mandelbrot
             {
                     /*
                      * Zooms out to the previous point, and removes the last postion from the stack.
-                     * @TODO: Currently not working :(
+                     * Does not work correctly while colour cycling is enabled.
                      * */
                 case "-":
                     State tmp = (State)zoomLevels.ElementAt(zoomLevels.Count - 2);;
 
-                    zoomLevels.RemoveAt(zoomLevels.Count - 1);
+                    //disable colour cycling - wont work if enabled
+                    colourCycleTimer.Enabled = false;
+                    cycleColoursToolStripMenuItem.Checked = false;
+
+                    //remove indexed image - important
+                    offScreenIndexed = null;
+                    
+                    //dont remove from list if only one state is present
+                    if (zoomLevels.Count > 1)
+                        zoomLevels.RemoveAt(zoomLevels.Count - 1);
 
                     xstart = tmp.xstart;
                     ystart = tmp.ystart;
@@ -381,11 +414,11 @@ namespace Mandelbrot
                     xende = tmp.xende;
                     yende = tmp.yende;
 
-                    xzoom = (tmp.xende - tmp.xstart) / (double)x1;
-                    yzoom = (tmp.yende - tmp.ystart) / (double)y1;
+                    xzoom = (xende - xstart) / (double)x1;
+                    yzoom = (yende - ystart) / (double)y1;
 
                     refreshFractal();
-                    
+
                     break;
             }
         }
