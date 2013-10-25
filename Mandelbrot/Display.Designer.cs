@@ -180,7 +180,7 @@
             // maxIterationsToolStripMenuItem
             // 
             this.maxIterationsToolStripMenuItem.Name = "maxIterationsToolStripMenuItem";
-            this.maxIterationsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.maxIterationsToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.maxIterationsToolStripMenuItem.Text = "Max Iterations";
             this.maxIterationsToolStripMenuItem.Click += new System.EventHandler(this.maxIterationsToolStripMenuItem_Click);
             // 
@@ -204,6 +204,7 @@
             this.maxIterationsSlider.Value = 512;
             this.maxIterationsSlider.Visible = false;
             this.maxIterationsSlider.Scroll += new System.EventHandler(this.maxIterations_Scroll);
+            this.maxIterationsSlider.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Display_KeyPress);
             // 
             // Display
             // 
