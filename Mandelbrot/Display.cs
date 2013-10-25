@@ -219,6 +219,8 @@ namespace Mandelbrot
                 yzoom = (yende - ystart) / (double)y1;
 
                 //if zooming all the way out, clear the list
+                // * only works if the window is kept at it's initial size
+                // * not been able to work out a  more robust method
                 if (xzoom == 0.0033936652847949196 && yzoom == 0.0033936651583710408)
                 {
                     for (int i = 0; i < zoomLevels.Count - 1; i++) 
