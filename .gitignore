@@ -2,7 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/Mandelbrot/v16
-/Mandelbrot/bin/
-/Mandelbrot/obj/
+.vs/
+bin/
+obj/
 *.user

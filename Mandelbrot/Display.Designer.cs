@@ -215,7 +215,7 @@
             this.Controls.Add(this.picture);
             this.Controls.Add(this.mainMenuStrip);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            // this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mainMenuStrip;
             this.MinimumSize = new System.Drawing.Size(640, 480);
             this.Name = "Display";
