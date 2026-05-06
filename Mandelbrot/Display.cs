@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Mandelbrot
@@ -75,57 +76,82 @@ namespace Mandelbrot
 
         private void mandelbrot() // calculate all points
         {
-            int x, y;
-            float h, b, alt = 0.0f;
-
             action = false;
-            /* setCursor(c1); */
             Text = "Mandelbrot-Set will be produced - please wait...";
-            for (x = 0; x < x1; x += 2)
-                for (y = 0; y < y1; y++)
+
+            Rectangle bounds = new Rectangle(0, 0, offScreen.Width, offScreen.Height);
+            BitmapData bitmapData = offScreen.LockBits(bounds, ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+
+            try
+            {
+                int width = bitmapData.Width;
+                int height = bitmapData.Height;
+                int stride = bitmapData.Stride;
+                byte[] pixelBuffer = new byte[stride * height];
+
+                Color[] palette = BuildPalette();
+
+                for (int y = 0; y < height; y++)
                 {
-                    h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y); // color value
-                    if (h != alt)
+                    int rowOffset = y * stride;
+                    double imaginary = ystart + yzoom * y;
+
+                    for (int x = 0; x < width; x++)
                     {
-                        b = 1.0f - h * h; // brightnes
-                        ///djm added
-                        ///HSBcol.fromHSB(h,0.8f,b); //convert hsb to rgb then make a Java Color
-                        ///Color col = new Color(0,HSBcol.rChan,HSBcol.gChan,HSBcol.bChan);
-                        ///g1.setColor(col);
-                        //djm end
-                        //djm added to convert to RGB from HSB
+                        int iterations = pointcolour(xstart + xzoom * x, imaginary);
+                        Color color = palette[iterations];
+                        int pixelOffset = rowOffset + (x * 3);
 
-                        //g1.Clear((Color)HSBColor.FromHSB(new HSBColor(h, 0.8f, b)));     //Color(HSBColor.FromHSB(h, 0.8f, b));
-                        //djm test
-                        Mandelbrot.HSBColor hsb = new Mandelbrot.HSBColor(h * 255f, 0.8f * 255f, b * 255f);
-
-                        Color col = hsb.Color;
-                        int red = col.R;
-                        int green = col.G;
-                        int blue = col.B;
-
-                        alt = h;
-                        p.Color = Color.FromArgb(red, green, blue);
+                        pixelBuffer[pixelOffset] = color.B;
+                        pixelBuffer[pixelOffset + 1] = color.G;
+                        pixelBuffer[pixelOffset + 2] = color.R;
                     }
-                    g1.DrawLine(p, x, y, x + 1, y);
                 }
+
+                Marshal.Copy(pixelBuffer, 0, bitmapData.Scan0, pixelBuffer.Length);
+            }
+            finally
+            {
+                offScreen.UnlockBits(bitmapData);
+            }
 
             Text = "Mandelbrot-Set ready - please select zoom area with pressed mouse.";
         }
 
-        private float pointcolour(double xwert, double ywert) // color value from 0.0 to 1.0 by iterations
+        private Color[] BuildPalette()
         {
-            double r = 0.0, i = 0.0, m = 0.0;
+            Color[] palette = new Color[MAX + 1];
+            for (int i = 0; i <= MAX; i++)
+            {
+                float h = (float)i / MAX;
+                float b = 1.0f - h * h;
+                palette[i] = new HSBColor(h * 255f, 0.8f * 255f, b * 255f).Color;
+            }
+
+            return palette;
+        }
+
+        private int pointcolour(double xwert, double ywert) // iterations for current point
+        {
+            double r = 0.0;
+            double i = 0.0;
             int j = 0;
 
-            while ((j < MAX) && (m < 4.0))
+            while (j < MAX)
             {
-                j++;
-                m = r * r - i * i;
+                double rr = r * r;
+                double ii = i * i;
+                if (rr + ii >= 4.0)
+                {
+                    break;
+                }
+
                 i = 2.0 * r * i + ywert;
-                r = m + xwert;
+                r = rr - ii + xwert;
+                j++;
             }
-            return (float)j / (float)MAX;
+
+            return j;
         }
 
         private void initvalues() // reset start values
