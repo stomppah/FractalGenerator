@@ -1,0 +1,9 @@
+services:
+  mtg-watcher:
+    build: .
+    container_name: mtg-watcher-test
+    env_file:
+      - .env.test
+    volumes:
+      - ./.auction_mtg_seen.json:/app/.auction_mtg_seen.json
+    command: ["python", "auction_mtg_watcher.py", "--dry-run"]

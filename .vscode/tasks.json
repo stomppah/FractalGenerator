@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Watcher: Dry Run",
+      "type": "shell",
+      "command": "python auction_mtg_watcher.py --dry-run",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Docker Compose: Test Run",
+      "type": "shell",
+      "command": "docker compose -f docker-compose.test.yml --env-file .env.test up --build --abort-on-container-exit",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

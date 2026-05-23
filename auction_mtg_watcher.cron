@@ -1,0 +1,3 @@
+# Run every 10 minutes.
+# Install with: crontab auction_mtg_watcher.cron
+*/10 * * * * cd /workspace/FractalGenerator && SMTP_HOST=smtp.gmail.com SMTP_PORT=587 SMTP_USER='YOUR_SMTP_USER' SMTP_PASS='YOUR_SMTP_PASS' SMTP_FROM='YOUR_FROM_EMAIL' /usr/bin/env python3 /workspace/FractalGenerator/auction_mtg_watcher.py >> /workspace/FractalGenerator/auction_mtg_watcher.log 2>&1
